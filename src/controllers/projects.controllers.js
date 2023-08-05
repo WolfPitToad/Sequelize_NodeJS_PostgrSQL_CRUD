@@ -1,10 +1,11 @@
 import {Project} from '../models/Project.js'
+import { Task } from '../models/Task.js'
 
 export const getProjects= async (req,res)=>{
     try{
         const projects = await Project.findAll()
         res.json(projects)
-    }catch{
+    }catch(error){
         return res.status(500).json({message: error.message});
     }
 
@@ -18,24 +19,22 @@ export const createProjects= async (req,res)=>{
             priority
         })
         res.json(newProject)
-    }catch{
+    }catch(error){
         return res.status(500).json({message: error.message});
     }
 
 }
 
 export const updateProject= async(req,res)=>{
+    const{id}=req.params
     try{
-        const{id}=req.params
-        const{name,priority,description}=req.body
-        const project = await Project.findByPk(id)
-        project.name=name
-        project.priority=priority
-        project.description=description
+        const project= await Task.findOne({
+            where:{id}
+        })
+        project.set(req.body)
         //findOne tambien funciona
         await project.save()
-        console.log(project)
-        res.send('Actualizando proyecto...')
+        return res.json(project)
     }catch{
         return res.status(500).json({message: error.message})
 
@@ -54,7 +53,7 @@ export const deleteProject= async(req,res)=>{
         })
         res.sendStatus(204)
 
-    }catch{
+    }catch(error){
         return res.status(500).json({message: error.message})
 
     }
@@ -73,9 +72,23 @@ export const getProjectby= async(req,res)=>{
             return res.status(404).json({message:'Projecto no existe'})
         }
         res.json(project)
-    }catch{
+    }catch(error){
         return res.status(500).json({message:error.message})
 
     }
 
+}
+
+export const getProjectTask = async(req,res)=>{
+    try{
+        const{id}=req.params
+        const tasks=await Task.findAll({
+            where:{projectId:id}
+        })
+        res.json(tasks)
+    }catch(error){
+        res.status(500).json({message:message.error})
+
+    }
+   
 }

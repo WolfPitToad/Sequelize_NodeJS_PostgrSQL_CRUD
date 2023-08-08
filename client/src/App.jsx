@@ -5,6 +5,7 @@ import { AuthProvider } from "./context/AuthContext";
 
 function App(){
   return(
+    <AuthProvider>       
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<h1>Pagina de Inicio</h1>}/>
@@ -16,6 +17,8 @@ function App(){
         <Route path='/profile' element={<h1>Usuario</h1>}/>
       </Routes>
     </BrowserRouter>
+    </AuthProvider>
+
   )
 }
 export default App

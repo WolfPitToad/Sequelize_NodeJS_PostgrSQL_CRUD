@@ -7,6 +7,11 @@ import { token } from "morgan"
 export const userRegister  = async (req,res)=>{
     const {name,username,email,password}=req.body
     try{
+        const userFound= await User.findOne({
+            where:{email}
+        })
+        if (userFound) return res.status(400).json(['El correo ya esta en uso'])
+
         const passwordHash = await by.hash(password,10)
         const newUser= await User.create({
             name,
